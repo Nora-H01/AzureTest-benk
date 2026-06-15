@@ -20,27 +20,28 @@ namespace AzureTest_benk.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Game>>> GetAll()
         {
-            return await _context.Games.ToListAsync();
+            return await _context.Game.ToListAsync();
         }
 
         [HttpGet("test-db")]
         public async Task<IActionResult> TestDb()
         {
-            var count = await _context.Games.CountAsync();
+            var count = await _context.Game.CountAsync();
             return Ok(new { gamesInDb = count });
         }
 
-        [HttpPost("test-insert")]
-        public async Task<IActionResult> InsertTest()
+        [HttpPost]
+        public async Task<ActionResult<Game>> Create(CreateGameDTO dto)
         {
             var game = new Game
             {
-                Name = "Test Game",
-                Genre = "Test",
-                ReleaseDate = DateTime.Now
+                Name = dto.Name,
+                Genre = dto.Genre,
+                ReleaseDate = DateTime.UtcNow
             };
 
-            _context.Games.Add(game);
+            _context.Game.Add(game);
+
             await _context.SaveChangesAsync();
 
             return Ok(game);
