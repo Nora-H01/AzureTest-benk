@@ -23,7 +23,7 @@ namespace AzureTest_benk.Controllers
             return await _context.Game.ToListAsync();
         }
 
-        [HttpGet("test-db")]
+        [HttpGet("count")]
         public async Task<IActionResult> TestDb()
         {
             var count = await _context.Game.CountAsync();
@@ -45,6 +45,20 @@ namespace AzureTest_benk.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(game);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var game = await _context.Game.FindAsync(id);
+
+            if (game == null)
+            {
+                return NotFound($"The ID game n:{id} not found");
+            }
+            _context.Game.Remove(game);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
